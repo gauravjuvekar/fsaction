@@ -1,0 +1,6 @@
+[Unit]
+Description=Watch %f for file changes and run %f/.fsaction
+
+[Service]
+Type=exec
+ExecStart=fsaction "%f"

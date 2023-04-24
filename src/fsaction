@@ -1,0 +1,29 @@
+#!/bin/bash
+set -x
+
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+
+DIR="$1"
+EXEC_FILE="$1/.fsaction"
+
+if [ ! -d "$DIR" ]; then
+	echo "'$DIR' is not a directory" >&2
+	exit 1
+fi
+
+
+if [ ! -x "$EXEC_FILE" ]; then
+	echo "'$EXEC_FILE' is not executable" >&2
+	exit 1
+fi
+
+EXEC_FILE="$(realpath --canonicalize-existing --no-symlinks "${EXEC_FILE}")"
+
+inotifywait -m -e close_write -e moved_to --format '%w%f' "$DIR" \
+	  | while IFS= read -r line; do
+
+	event_on_file="$(realpath --canonicalize-existing --no-symlinks "${line}")"
+	if [ -f "$event_on_file" ]; then
+		( cd "$DIR" && "$EXEC_FILE" "$event_on_file" )
+	fi
+done
