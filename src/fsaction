@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -x
 
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
