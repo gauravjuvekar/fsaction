@@ -19,7 +19,7 @@
               pkgs.coreutils-full
               pkgs.inotify-tools
             ];
-          text = ./src/fsaction;
+          text = (builtins.readFile ./src/fsaction);
         };
       in
       {
