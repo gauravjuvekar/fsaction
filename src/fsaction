@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -x
 
+# shellcheck disable=SC2064
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
 DIR="$1"
