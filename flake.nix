@@ -7,11 +7,10 @@
       flake-utils.url = "github:numtide/flake-utils";
     };
 
-  outputs = { self, nixpkgs, flake-utils, ... }:
+  outputs = { nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        inherit (pkgs) lib;
 
         fsaction = pkgs.writeShellApplication {
           name = "fsaction";
@@ -24,6 +23,7 @@
         };
       in
       {
+        packages.fsaction = fsaction;
         packages.default = fsaction;
       }
     );
