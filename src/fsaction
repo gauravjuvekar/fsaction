@@ -23,8 +23,12 @@ EXEC_FILE="$(realpath --canonicalize-existing --no-symlinks "${EXEC_FILE}")"
 inotifywait -m -e close_write -e moved_to --no-newline --format '%w%f%0' "$DIR" \
 	  | while IFS= read -r -d '' line; do
 
+	set +e
+	set +u
 	event_on_file="$(realpath --canonicalize-existing --no-symlinks "${line}")"
-	if [ -f "$event_on_file" ]; then
-		( cd "$DIR" && "$EXEC_FILE" "$event_on_file" )
+	if [ -n "${event_on_file+set}" ]; then
+		if [ -f "$event_on_file" ]; then
+			( cd "$DIR" && "$EXEC_FILE" "$event_on_file" )
+		fi
 	fi
 done
